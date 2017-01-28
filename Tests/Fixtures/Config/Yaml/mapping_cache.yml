@@ -1,4 +1,5 @@
 ivory_serializer:
-    debug: false
     mapping:
-        cache: cache.pool
+        cache:
+            prefix: acme
+            pool: cache.custom

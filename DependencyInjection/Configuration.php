@@ -13,7 +13,6 @@ namespace Ivory\SerializerBundle\DependencyInjection;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
-use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -30,7 +29,6 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = $this->createTreeBuilder();
         $treeBuilder->root('ivory_serializer')
             ->children()
-            ->booleanNode('debug')->defaultValue('%kernel.debug%')->end()
             ->append($this->createMappingNode())
             ->append($this->createTypesNode())
             ->append($this->createVisitorsNode());
@@ -46,6 +44,15 @@ class Configuration implements ConfigurationInterface
         return $this->createNode('mapping')
             ->addDefaultsIfNotSet()
             ->children()
+                ->booleanNode('annotation')->defaultValue(class_exists(AnnotationReader::class))->end()
+                ->booleanNode('reflection')->defaultTrue()->end()
+                ->arrayNode('cache')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('prefix')->defaultValue('ivory_serializer')->end()
+                        ->scalarNode('pool')->defaultValue('cache.system')->end()
+                    ->end()
+                ->end()
                 ->arrayNode('auto')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -64,8 +71,6 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('paths')
                     ->prototype('scalar')->end()
                 ->end()
-                ->booleanNode('annotations')->defaultValue(class_exists(AnnotationReader::class))->end()
-                ->scalarNode('cache')->end()
             ->end();
     }
 
@@ -135,13 +140,12 @@ class Configuration implements ConfigurationInterface
 
     /**
      * @param string $name
-     * @param string $type
      *
-     * @return ArrayNodeDefinition|NodeDefinition
+     * @return ArrayNodeDefinition
      */
-    private function createNode($name, $type = 'array')
+    private function createNode($name)
     {
-        return $this->createTreeBuilder()->root($name, $type);
+        return $this->createTreeBuilder()->root($name);
     }
 
     /**

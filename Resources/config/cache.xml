@@ -8,17 +8,12 @@
 >
     <services>
         <service
-            id="ivory.serializer.mapping.factory"
-            class="Ivory\Serializer\Mapping\Factory\CacheClassMetadataFactory"
+            id="ivory.serializer.cache_warmer"
+            class="Ivory\SerializerBundle\CacheWarmer\SerializerCacheWarmer"
         >
-            <argument type="service" id="ivory.serializer.mapping.factory.default" />
-        </service>
-
-        <service
-            id="ivory.serializer.mapping.factory.default"
-            class="Ivory\Serializer\Mapping\Factory\ClassMetadataFactory"
-        >
+            <argument type="service" id="ivory.serializer.mapping.factory" />
             <argument type="service" id="ivory.serializer.mapping.loader" />
+            <tag name="kernel.cache_warmer" />
         </service>
     </services>
 </container>
