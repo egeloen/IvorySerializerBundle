@@ -1,0 +1,5 @@
+ivory_serializer:
+    visitors:
+        json:
+            max_depth: 512
+            options: 0

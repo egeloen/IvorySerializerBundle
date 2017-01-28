@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container
+    xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services
+                        http://symfony.com/schema/dic/services/services-1.0.xsd"
+>
+    <services>
+        <service
+            id="ivory.serializer.visitor.serialization"
+            class="Ivory\Serializer\Visitor\AbstractSerializationVisitor"
+            abstract="true"
+        >
+            <argument type="service" id="ivory.serializer.accessor" />
+        </service>
+
+        <service
+            id="ivory.serializer.visitor.deserialization"
+            class="Ivory\Serializer\Visitor\AbstractDeserializationVisitor"
+            abstract="true"
+        >
+            <argument type="service" id="ivory.serializer.instantiator" />
+            <argument type="service" id="ivory.serializer.mutator" />
+        </service>
+
+        <service
+            id="ivory.serializer.visitor.csv.serialization"
+            class="Ivory\Serializer\Visitor\Csv\CsvSerializationVisitor"
+            parent="ivory.serializer.visitor.serialization"
+        >
+            <tag name="ivory.serializer.visitor" direction="serialization" format="csv" />
+        </service>
+
+        <service
+            id="ivory.serializer.visitor.csv.deserialization"
+            class="Ivory\Serializer\Visitor\Csv\CsvDeserializationVisitor"
+            parent="ivory.serializer.visitor.deserialization"
+        >
+            <tag name="ivory.serializer.visitor" direction="deserialization" format="csv" />
+        </service>
+
+        <service
+            id="ivory.serializer.visitor.json.serialization"
+            class="Ivory\Serializer\Visitor\Json\JsonSerializationVisitor"
+            parent="ivory.serializer.visitor.serialization"
+        >
+            <tag name="ivory.serializer.visitor" direction="serialization" format="json" />
+        </service>
+
+        <service
+            id="ivory.serializer.visitor.json.deserialization"
+            class="Ivory\Serializer\Visitor\Json\JsonDeserializationVisitor"
+            parent="ivory.serializer.visitor.deserialization"
+        >
+            <tag name="ivory.serializer.visitor" direction="deserialization" format="json" />
+        </service>
+
+        <service
+            id="ivory.serializer.visitor.xml.serialization"
+            class="Ivory\Serializer\Visitor\Xml\XmlSerializationVisitor"
+            parent="ivory.serializer.visitor.serialization"
+        >
+            <tag name="ivory.serializer.visitor" direction="serialization" format="xml" />
+        </service>
+
+        <service
+            id="ivory.serializer.visitor.xml.deserialization"
+            class="Ivory\Serializer\Visitor\Xml\XmlDeserializationVisitor"
+            parent="ivory.serializer.visitor.deserialization"
+        >
+            <tag name="ivory.serializer.visitor" direction="deserialization" format="xml" />
+        </service>
+
+        <service
+            id="ivory.serializer.visitor.yaml.serialization"
+            class="Ivory\Serializer\Visitor\Yaml\YamlSerializationVisitor"
+            parent="ivory.serializer.visitor.serialization"
+        >
+            <tag name="ivory.serializer.visitor" direction="serialization" format="yaml" />
+        </service>
+
+        <service
+            id="ivory.serializer.visitor.yaml.deserialization"
+            class="Ivory\Serializer\Visitor\Yaml\YamlDeserializationVisitor"
+            parent="ivory.serializer.visitor.deserialization"
+        >
+            <tag name="ivory.serializer.visitor" direction="deserialization" format="yaml" />
+        </service>
+    </services>
+</container>

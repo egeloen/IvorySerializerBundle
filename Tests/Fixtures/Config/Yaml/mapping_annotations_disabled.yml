@@ -1,0 +1,3 @@
+ivory_serializer:
+    mapping:
+        annotations: false

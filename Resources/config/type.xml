@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container
+    xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services
+                        http://symfony.com/schema/dic/services/services-1.0.xsd"
+>
+    <services>
+        <service id="ivory.serializer.type.lexer" class="Ivory\Serializer\Type\Parser\TypeLexer" />
+
+        <service id="ivory.serializer.type.parser" class="Ivory\Serializer\Type\Parser\TypeParser">
+            <argument type="service" id="ivory.serializer.type.lexer" />
+        </service>
+
+        <service id="ivory.serializer.type.array" class="Ivory\Serializer\Type\ArrayType">
+            <tag name="ivory.serializer.type" alias="array" />
+        </service>
+
+        <service id="ivory.serializer.type.boolean" class="Ivory\Serializer\Type\BooleanType">
+            <tag name="ivory.serializer.type" alias="bool" />
+            <tag name="ivory.serializer.type" alias="boolean" />
+        </service>
+
+        <service id="ivory.serializer.type.closure" class="Ivory\Serializer\Type\ClosureType">
+            <tag name="ivory.serializer.type" alias="closure" />
+        </service>
+
+        <service id="ivory.serializer.type.date_time" class="Ivory\Serializer\Type\DateTimeType">
+            <tag name="ivory.serializer.type" alias="DateTimeInterface" />
+        </service>
+
+        <service id="ivory.serializer.type.float" class="Ivory\Serializer\Type\FloatType">
+            <tag name="ivory.serializer.type" alias="double" />
+            <tag name="ivory.serializer.type" alias="float" />
+            <tag name="ivory.serializer.type" alias="numeric" />
+        </service>
+
+        <service id="ivory.serializer.type.integer" class="Ivory\Serializer\Type\IntegerType">
+            <tag name="ivory.serializer.type" alias="int" />
+            <tag name="ivory.serializer.type" alias="integer" />
+        </service>
+
+        <service id="ivory.serializer.type.null" class="Ivory\Serializer\Type\NullType">
+            <tag name="ivory.serializer.type" alias="!null" />
+        </service>
+
+        <service id="ivory.serializer.type.object" class="Ivory\Serializer\Type\ObjectType">
+            <argument type="service" id="ivory.serializer.mapping.factory" />
+            <tag name="ivory.serializer.type" alias="object" />
+        </service>
+
+        <service id="ivory.serializer.type.resource" class="Ivory\Serializer\Type\ResourceType">
+            <tag name="ivory.serializer.type" alias="resource" />
+        </service>
+
+        <service id="ivory.serializer.type.std_class" class="Ivory\Serializer\Type\StdClassType">
+            <tag name="ivory.serializer.type" alias="stdClass" />
+        </service>
+
+        <service id="ivory.serializer.type.string" class="Ivory\Serializer\Type\StringType">
+            <tag name="ivory.serializer.type" alias="string" />
+        </service>
+    </services>
+</container>

@@ -1,0 +1,154 @@
+<?php
+
+/*
+ * This file is part of the Ivory Serializer bundle package.
+ *
+ * (c) Eric GELOEN <geloen.eric@gmail.com>
+ *
+ * For the full copyright and license information, please read the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Ivory\SerializerBundle\DependencyInjection;
+
+use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+
+/**
+ * @author GeLo <geloen.eric@gmail.com>
+ */
+class Configuration implements ConfigurationInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfigTreeBuilder()
+    {
+        $treeBuilder = $this->createTreeBuilder();
+        $treeBuilder->root('ivory_serializer')
+            ->children()
+            ->booleanNode('debug')->defaultValue('%kernel.debug%')->end()
+            ->append($this->createMappingNode())
+            ->append($this->createTypesNode())
+            ->append($this->createVisitorsNode());
+
+        return $treeBuilder;
+    }
+
+    /**
+     * @return ArrayNodeDefinition
+     */
+    private function createMappingNode()
+    {
+        return $this->createNode('mapping')
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('auto')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('enabled')->defaultTrue()->end()
+                        ->arrayNode('paths')
+                            ->prototype('scalar')->end()
+                            ->defaultValue([
+                                'Resources/config/serializer',
+                                'Resources/config/serializer.json',
+                                'Resources/config/serializer.xml',
+                                'Resources/config/serializer.yml',
+                            ])
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('paths')
+                    ->prototype('scalar')->end()
+                ->end()
+                ->booleanNode('annotations')->defaultValue(class_exists(AnnotationReader::class))->end()
+                ->scalarNode('cache')->end()
+            ->end();
+    }
+
+    /**
+     * @return ArrayNodeDefinition
+     */
+    private function createTypesNode()
+    {
+        return $this->createNode('types')
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('date_time')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('format')->defaultValue(\DateTime::RFC3339)->end()
+                        ->scalarNode('timezone')->defaultValue(date_default_timezone_get())->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+
+    /**
+     * @return ArrayNodeDefinition
+     */
+    private function createVisitorsNode()
+    {
+        return $this->createNode('visitors')
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('csv')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('delimiter')->defaultValue(',')->end()
+                        ->scalarNode('enclosure')->defaultValue('"')->end()
+                        ->scalarNode('escape_char')->defaultValue('\\')->end()
+                        ->scalarNode('key_separator')->defaultValue('.')->end()
+                    ->end()
+                ->end()
+                ->arrayNode('json')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->integerNode('max_depth')->defaultValue(512)->end()
+                        ->integerNode('options')->defaultValue(0)->end()
+                    ->end()
+                ->end()
+                ->arrayNode('xml')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('version')->defaultValue('1.0')->end()
+                        ->scalarNode('encoding')->defaultValue('UTF-8')->end()
+                        ->booleanNode('format_output')->defaultValue('%kernel.debug%')->end()
+                        ->scalarNode('root')->defaultValue('result')->end()
+                        ->scalarNode('entry')->defaultValue('entry')->end()
+                        ->scalarNode('entry_attribute')->defaultValue('key')->end()
+                    ->end()
+                ->end()
+                ->arrayNode('yaml')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->integerNode('inline')->defaultValue(2)->end()
+                        ->integerNode('indent')->defaultValue(4)->end()
+                        ->integerNode('options')->defaultValue(0)->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+
+    /**
+     * @param string $name
+     * @param string $type
+     *
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
+    private function createNode($name, $type = 'array')
+    {
+        return $this->createTreeBuilder()->root($name, $type);
+    }
+
+    /**
+     * @return TreeBuilder
+     */
+    private function createTreeBuilder()
+    {
+        return new TreeBuilder();
+    }
+}

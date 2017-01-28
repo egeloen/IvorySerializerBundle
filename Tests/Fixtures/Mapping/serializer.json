@@ -1,0 +1,8 @@
+{
+    "Ivory\\SerializerBundle\\Tests\\Fixtures\\Bundle\\Model\\Model": {
+        "xml_root": "model",
+        "properties": {
+            "foo": {}
+        }
+    }
+}

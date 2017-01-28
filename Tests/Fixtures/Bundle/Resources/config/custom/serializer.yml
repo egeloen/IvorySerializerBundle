@@ -1,0 +1,4 @@
+Ivory\SerializerBundle\Tests\Fixtures\Bundle\Model\Model:
+    properties:
+        foo:
+            xml_value: true

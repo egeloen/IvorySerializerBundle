@@ -1,0 +1,6 @@
+ivory_serializer:
+    visitors:
+        yaml:
+            inline: 2
+            indent: 4
+            options: 0

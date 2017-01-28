@@ -1,0 +1,4 @@
+ivory_serializer:
+    mapping:
+        paths:
+            - "%kernel.root_dir%/Invalid"

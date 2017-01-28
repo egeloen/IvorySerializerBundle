@@ -1,0 +1,9 @@
+{
+    "Ivory\\SerializerBundle\\Tests\\Fixtures\\Bundle\\Model\\Model": {
+        "properties": {
+            "foo": {
+                "readable": false
+            }
+        }
+    }
+}

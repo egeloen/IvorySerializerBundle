@@ -1,0 +1,8 @@
+ivory_serializer:
+    mapping:
+        auto:
+            paths:
+                - Resources/config/custom
+                - Resources/config/custom.json
+                - Resources/config/custom.xml
+                - Resources/config/custom.yml

@@ -1,0 +1,4 @@
+ivory_serializer:
+    debug: false
+    mapping:
+        cache: cache.pool

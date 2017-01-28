@@ -1,0 +1,4 @@
+ivory_serializer:
+    mapping:
+        auto:
+            enabled: false

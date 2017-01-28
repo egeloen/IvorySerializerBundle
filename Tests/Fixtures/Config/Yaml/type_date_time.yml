@@ -1,0 +1,5 @@
+ivory_serializer:
+    types:
+        date_time:
+            format: "Y-m-d\\TH:i:sP"
+            timezone: UTC

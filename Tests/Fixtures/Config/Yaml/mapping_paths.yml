@@ -1,0 +1,7 @@
+ivory_serializer:
+    mapping:
+        paths:
+            - "%kernel.root_dir%/Mapping"
+            - "%kernel.root_dir%/Mapping/serializer.json"
+            - "%kernel.root_dir%/Mapping/serializer.xml"
+            - "%kernel.root_dir%/Mapping/serializer.yml"

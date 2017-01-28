@@ -1,0 +1,7 @@
+ivory_serializer:
+    visitors:
+        csv:
+            delimiter: ","
+            enclosure: '"'
+            escape_char: "\\"
+            key_separator: "."

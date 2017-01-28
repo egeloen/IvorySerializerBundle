@@ -1,0 +1,9 @@
+{
+    "Ivory\\SerializerBundle\\Tests\\Fixtures\\Bundle\\Model\\Model": {
+        "properties": {
+            "foo": {
+                "since": "1.1.0"
+            }
+        }
+    }
+}
