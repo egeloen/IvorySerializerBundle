@@ -18,7 +18,8 @@
     "require-dev": {
         "doctrine/annotations": "^1.0",
         "friendsofphp/php-cs-fixer": "^2.0",
-        "phpunit/phpunit": "^5.0",
+        "phpunit/phpunit": "^5.4",
+        "symfony/cache": "^3.0",
         "symfony/phpunit-bridge": "^2.7|^3.0"
     },
     "autoload": {

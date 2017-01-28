@@ -17,6 +17,7 @@ use Ivory\Serializer\Mapping\Loader\ClassMetadataLoaderInterface;
 use Ivory\Serializer\Mapping\Loader\DirectoryClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\ReflectionClassMetadataLoader;
 use Ivory\SerializerBundle\CacheWarmer\SerializerCacheWarmer;
+use Ivory\SerializerBundle\Tests\Fixtures\Bundle\Model\Model;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 /**
@@ -42,7 +43,7 @@ class SerializerCacheWarmerTest extends \PHPUnit_Framework_TestCase
         $cacheWarmer = $this->createCacheWarmer();
         $cacheWarmer->warmUp(sys_get_temp_dir());
 
-        $this->assertCount(1, $this->pool->getValues());
+        $this->assertTrue($this->pool->hasItem(strtr(Model::class, '\\', '_')));
     }
 
     public function testWarmUpWithAnonymousLoader()
@@ -50,7 +51,7 @@ class SerializerCacheWarmerTest extends \PHPUnit_Framework_TestCase
         $cacheWarmer = $this->createCacheWarmer(new ReflectionClassMetadataLoader());
         $cacheWarmer->warmUp(sys_get_temp_dir());
 
-        $this->assertCount(0, $this->pool->getValues());
+        $this->assertFalse($this->pool->hasItem(strtr(Model::class, '\\', '_')));
     }
 
     public function testOptional()
