@@ -61,9 +61,9 @@ class Configuration implements ConfigurationInterface
                             ->prototype('scalar')->end()
                             ->defaultValue([
                                 'Resources/config/serializer',
-                                'Resources/config/serializer.json',
-                                'Resources/config/serializer.xml',
-                                'Resources/config/serializer.yml',
+                                'Resources/config/serialization.json',
+                                'Resources/config/serialization.xml',
+                                'Resources/config/serialization.yml',
                             ])
                         ->end()
                     ->end()

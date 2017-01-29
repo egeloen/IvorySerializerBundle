@@ -8,16 +8,16 @@ By default, the bundle automatically registers the following directory and files
 
 ```
 Resources/config/serializer
-Resources/config/serializer.json
-Resources/config/serializer.xml
-Resources/config/serializer.yml
+Resources/config/serialization.json
+Resources/config/serialization.xml
+Resources/config/serialization.yml
 ```
 
 That means you just need to put your metadatas in the `Resources/config/serializer` directory or in the 
 `Resources/config/serializer.(json|xml|yml)` file of your bundle.
 
 Hopefully, these paths are configurable. If you would prefer to use the `Resources/config/serialization` directory as 
-well as the `Resources/config/serialization.(json|xml|yml)`, you can use: 
+well as the `Resources/config/custom.xml`, you can use:
 
 ``` yaml
 ivory_serializer:
@@ -25,9 +25,7 @@ ivory_serializer:
         auto:
             paths:
                 - Resources/config/serialization
-                - Resources/config/serialization.json
-                - Resources/config/serialization.xml
-                - Resources/config/serialization.yml
+                - Resources/config/custom.xml
 ```
 
 If you don't want to use the auto mapping feature, you can disable it:
