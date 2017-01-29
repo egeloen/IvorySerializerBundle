@@ -11,6 +11,7 @@
 
 namespace Ivory\SerializerBundle\Tests;
 
+use Ivory\SerializerBundle\DependencyInjection\Compiler\RegisterClassMetadataLoaderPass;
 use Ivory\SerializerBundle\DependencyInjection\Compiler\RegisterTypePass;
 use Ivory\SerializerBundle\DependencyInjection\Compiler\RegisterVisitorPass;
 use Ivory\SerializerBundle\IvorySerializerBundle;
@@ -46,11 +47,17 @@ class IvorySerializerBundleTest extends \PHPUnit_Framework_TestCase
         $container
             ->expects($this->at(0))
             ->method('addCompilerPass')
-            ->with($this->isInstanceOf(RegisterTypePass::class))
+            ->with($this->isInstanceOf(RegisterClassMetadataLoaderPass::class))
             ->will($this->returnSelf());
 
         $container
             ->expects($this->at(1))
+            ->method('addCompilerPass')
+            ->with($this->isInstanceOf(RegisterTypePass::class))
+            ->will($this->returnSelf());
+
+        $container
+            ->expects($this->at(2))
             ->method('addCompilerPass')
             ->with($this->isInstanceOf(RegisterVisitorPass::class))
             ->will($this->returnSelf());

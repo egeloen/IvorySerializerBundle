@@ -11,13 +11,10 @@
 
 namespace Ivory\SerializerBundle\DependencyInjection;
 
-use Ivory\Serializer\Mapping\Factory\CacheClassMetadataFactory;
 use Ivory\Serializer\Mapping\Loader\AnnotationClassMetadataLoader;
-use Ivory\Serializer\Mapping\Loader\ChainClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\DirectoryClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\FileClassMetadataLoader;
 use Ivory\Serializer\Mapping\Loader\ReflectionClassMetadataLoader;
-use Ivory\SerializerBundle\CacheWarmer\SerializerCacheWarmer;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\DirectoryResource;
@@ -41,6 +38,7 @@ class IvorySerializerExtension extends ConfigurableExtension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         $resources = [
+            'cache',
             'common',
             'mapping',
             'navigator',
@@ -66,26 +64,14 @@ class IvorySerializerExtension extends ConfigurableExtension
      */
     private function loadCache(array $config, ContainerBuilder $container)
     {
-        if ($config['debug'] || !isset($config['mapping']['cache'])) {
-            return;
-        }
+        $container
+            ->getDefinition('ivory.serializer.mapping.factory')
+            ->addArgument($cache = new Reference($config['mapping']['cache']['pool']))
+            ->addArgument($config['mapping']['cache']['prefix']);
 
-        $container->setDefinition(
-            'ivory.serializer.mapping.factory',
-            new Definition(CacheClassMetadataFactory::class, [
-                $container->getDefinition('ivory.serializer.mapping.factory'),
-                new Reference($config['mapping']['cache']),
-            ])
-        );
-
-        $container->setDefinition(
-            'ivory.serializer.cache_warmer',
-            (new Definition(SerializerCacheWarmer::class, [
-                new Reference('ivory.serializer.mapping.factory'),
-                new Reference('ivory.serializer.mapping.loader'),
-                new Reference($config['mapping']['cache']),
-            ]))->addTag('kernel.cache_warmer')
-        );
+        $container
+            ->getDefinition('ivory.serializer.cache_warmer')
+            ->addArgument($cache);
     }
 
     /**
@@ -108,33 +94,37 @@ class IvorySerializerExtension extends ConfigurableExtension
             }
         }
 
-        $loaders = [new Definition(ReflectionClassMetadataLoader::class, [
-            new Reference('property_info', ContainerBuilder::NULL_ON_INVALID_REFERENCE),
-            $typeParser = new Reference('ivory.serializer.type.parser'),
-        ])];
+        $loaders = [];
+        $typeParser = new Reference('ivory.serializer.type.parser');
 
-        if ($config['annotations']) {
-            $loaders[] = new Definition(AnnotationClassMetadataLoader::class, [
+        if ($config['reflection']) {
+            $loaders['reflection'] = new Definition(ReflectionClassMetadataLoader::class, [
+                new Reference('property_info', ContainerBuilder::NULL_ON_INVALID_REFERENCE),
+                $typeParser,
+            ]);
+        }
+
+        if ($config['annotation']) {
+            $loaders['annotation'] = new Definition(AnnotationClassMetadataLoader::class, [
                 new Reference('annotation_reader'),
                 $typeParser,
             ]);
         }
 
         if (!empty($directories)) {
-            $loaders[] = new Definition(DirectoryClassMetadataLoader::class, [$directories, $typeParser]);
+            $loaders['directory'] = new Definition(DirectoryClassMetadataLoader::class, [$directories, $typeParser]);
         }
 
         foreach ($files as $file) {
-            $loaders[] = new Definition(FileClassMetadataLoader::class, [$file, $typeParser]);
+            $loaders['file_'.sha1($file)] = new Definition(FileClassMetadataLoader::class, [$file, $typeParser]);
         }
 
-        if (count($loaders) > 1) {
-            $loader = new Definition(ChainClassMetadataLoader::class, [$loaders, $typeParser]);
-        } else {
-            $loader = array_shift($loaders);
+        foreach ($loaders as $key => $loader) {
+            $container->setDefinition(
+                'ivory.serializer.mapping.loader.'.$key,
+                $loader->addTag('ivory.serializer.loader')
+            );
         }
-
-        $container->setDefinition('ivory.serializer.mapping.loader', $loader);
     }
 
     /**

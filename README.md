@@ -13,10 +13,31 @@
 The bundle provides an integration of the [Ivory Serializer](https://github.com/egeloen/ivory-serializer) library for
 your Symfony2 project.
 
+``` php
+use Ivory\Serializer\Format;
+
+$stdClass = new \stdClass();
+$stdClass->foo = true;
+$stdClass->bar = ['foo', [123, 432.1]];
+
+$serializer = $container->get('ivory.serializer');
+
+echo $serializer->serialize($stdClass, Format::JSON);
+// {"foo": true,"bar": ["foo", [123, 432.1]]}
+
+$deserialize = $serializer->deserialize($json, \stdClass::class, Format::JSON);
+// $deserialize == $stdClass
+```
+
 ## Documentation
 
  - [Installation](/Resources/doc/installation.md)
- - FIXME ...
+ - [Usage](/Resources/doc/usage.md)
+ - [Configuration](/Resources/doc/configuration/index.md)
+    - [Mapping](/Resources/doc/configuration/mapping.md)
+    - [Type](/Resources/doc/configuration/type.md)
+    - [Visitor](/Resources/doc/configuration/visitor.md)
+    - [Cache](/Resources/doc/configuration/cache.md)
 
 ## Testing
 

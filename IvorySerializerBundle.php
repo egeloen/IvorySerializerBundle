@@ -11,6 +11,7 @@
 
 namespace Ivory\SerializerBundle;
 
+use Ivory\SerializerBundle\DependencyInjection\Compiler\RegisterClassMetadataLoaderPass;
 use Ivory\SerializerBundle\DependencyInjection\Compiler\RegisterTypePass;
 use Ivory\SerializerBundle\DependencyInjection\Compiler\RegisterVisitorPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -27,6 +28,7 @@ class IvorySerializerBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container
+            ->addCompilerPass(new RegisterClassMetadataLoaderPass())
             ->addCompilerPass(new RegisterTypePass())
             ->addCompilerPass(new RegisterVisitorPass());
     }

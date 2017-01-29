@@ -14,6 +14,7 @@ namespace Ivory\SerializerBundle\Tests\DependencyInjection;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Ivory\Serializer\Mapping\ClassMetadataInterface;
 use Ivory\Serializer\Mapping\Factory\CacheClassMetadataFactory;
+use Ivory\Serializer\Mapping\Loader\ChainClassMetadataLoader;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
 use Ivory\Serializer\Serializer;
 use Ivory\Serializer\Type\DateTimeType;
@@ -30,6 +31,7 @@ use Ivory\SerializerBundle\DependencyInjection\IvorySerializerExtension;
 use Ivory\SerializerBundle\IvorySerializerBundle;
 use Ivory\SerializerBundle\Tests\Fixtures\Bundle\AcmeFixtureBundle;
 use Ivory\SerializerBundle\Tests\Fixtures\Bundle\Model\Model;
+use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -55,7 +57,7 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
         $this->container->setParameter('kernel.debug', true);
         $this->container->setParameter('kernel.root_dir', __DIR__.'/../Fixtures');
         $this->container->set('annotation_reader', new AnnotationReader());
-        $this->container->set('cache.pool', $this->createCacheItemPoolInterface());
+        $this->container->set('cache.system', $this->createCacheItemPoolInterface());
         $this->container->registerExtension($extension = new IvorySerializerExtension());
         $this->container->loadFromExtension($extension->getAlias());
         (new IvorySerializerBundle())->build($this->container);
@@ -72,9 +74,19 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
         $this->container->compile();
 
         $this->assertInstanceOf(Serializer::class, $this->container->get('ivory.serializer'));
+
+        $this->assertInstanceOf(
+            CacheClassMetadataFactory::class,
+            $this->container->get('ivory.serializer.mapping.factory')
+        );
+
+        $this->assertInstanceOf(
+            ChainClassMetadataLoader::class,
+            $this->container->get('ivory.serializer.mapping.loader')
+        );
     }
 
-    public function testMappingAnnotationsEnabled()
+    public function testMappingAnnotationEnabled()
     {
         $this->container->compile();
 
@@ -85,9 +97,9 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
         ]);
     }
 
-    public function testMappingAnnotationsDisabled()
+    public function testMappingAnnotationDisabled()
     {
-        $this->loadConfiguration($this->container, 'mapping_annotations_disabled');
+        $this->loadConfiguration($this->container, 'mapping_annotation_disabled');
         $this->container->compile();
 
         $classMetadataFactory = $this->container->get('ivory.serializer.mapping.factory');
@@ -151,7 +163,6 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
     public function testMappingPaths()
     {
         $this->loadConfiguration($this->container, 'mapping_paths');
-        $this->container->setParameter('kernel.bundles', ['AcmeFixtureBundle' => AcmeFixtureBundle::class]);
         $this->container->compile();
 
         $classMetadataFactory = $this->container->get('ivory.serializer.mapping.factory');
@@ -159,39 +170,85 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
         $this->assertClassMetadata($classMetadataFactory->getClassMetadata(Model::class), [
             'foo' => [
                 'alias'         => 'bar',
-                'readable'      => false,
-                'writable'      => false,
-                'since'         => '1.0.0',
-                'until'         => '2.0.0',
-                'groups'        => ['bar'],
-                'type'          => 'int',
                 'xml_attribute' => true,
                 'xml_value'     => true,
             ],
         ], ['xml_root' => 'model']);
     }
 
+    public function testClassMetadataLoader()
+    {
+        $this->loadService('class_metadata_loader');
+        $this->container->compile();
+
+        $classMetadataFactory = $this->container->get('ivory.serializer.mapping.factory');
+
+        $this->assertClassMetadata($classMetadataFactory->getClassMetadata(Model::class), [
+            'foo' => [
+                'alias'         => 'bar',
+                'xml_attribute' => true,
+            ],
+        ]);
+    }
+
     public function testMappingCache()
     {
-        $this->container->setParameter('kernel.debug', false);
-        $this->loadConfiguration($this->container, 'mapping_cache');
         $this->container->compile();
+
+        $classMetadataFactoryService = 'ivory.serializer.mapping.factory';
+        $classMetadataFactoryDefinition = $this->container->getDefinition($classMetadataFactoryService);
+
+        $this->assertSame(
+            'ivory.serializer.mapping.factory.default',
+            (string) $classMetadataFactoryDefinition->getArgument(0)
+        );
+
+        $this->assertSame('cache.system', (string) $classMetadataFactoryDefinition->getArgument(1));
+        $this->assertSame('ivory_serializer', $classMetadataFactoryDefinition->getArgument(2));
 
         $this->assertInstanceOf(
             CacheClassMetadataFactory::class,
-            $this->container->get('ivory.serializer.mapping.factory')
+            $this->container->get($classMetadataFactoryService)
+        );
+    }
+
+    public function testCustomMappingCache()
+    {
+        $this->container->set('cache.custom', $this->createCacheItemPoolInterface());
+        $this->loadConfiguration($this->container, 'mapping_cache');
+        $this->container->compile();
+
+        $classMetadataFactoryService = 'ivory.serializer.mapping.factory';
+        $classMetadataFactoryDefinition = $this->container->getDefinition($classMetadataFactoryService);
+
+        $this->assertSame(
+            'ivory.serializer.mapping.factory.default',
+            (string) $classMetadataFactoryDefinition->getArgument(0)
         );
 
-        $cacheWarmerService = 'ivory.serializer.cache_warmer';
+        $this->assertSame('cache.custom', (string) $classMetadataFactoryDefinition->getArgument(1));
+        $this->assertSame('acme', $classMetadataFactoryDefinition->getArgument(2));
 
         $this->assertInstanceOf(
-            SerializerCacheWarmer::class,
-            $this->container->get($cacheWarmerService)
+            CacheClassMetadataFactory::class,
+            $this->container->get($classMetadataFactoryService)
         );
+    }
+
+    public function testCacheWarmer()
+    {
+        $this->container->compile();
+
+        $cacheWarmerService = 'ivory.serializer.cache_warmer';
 
         $this->assertSame(
             ['kernel.cache_warmer' => [[]]],
             $this->container->getDefinition($cacheWarmerService)->getTags()
+        );
+
+        $this->assertInstanceOf(
+            SerializerCacheWarmer::class,
+            $this->container->get($cacheWarmerService)
         );
     }
 
@@ -416,7 +473,27 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
      */
     private function createCacheItemPoolInterface()
     {
-        return $this->createMock(CacheItemPoolInterface::class);
+        $pool = $this->createMock(CacheItemPoolInterface::class);
+        $pool
+            ->expects($this->any())
+            ->method('getItem')
+            ->will($this->returnValue($this->createCacheItemMock()));
+
+        return $pool;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|CacheItemInterface
+     */
+    private function createCacheItemMock()
+    {
+        $item = $this->createMock(CacheItemInterface::class);
+        $item
+            ->expects($this->any())
+            ->method('set')
+            ->will($this->returnSelf());
+
+        return $item;
     }
 
     /**

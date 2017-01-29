@@ -18,7 +18,7 @@ env:
 before_script:
     - composer self-update
     - composer require --no-update symfony/framework-bundle:${SYMFONY_VERSION}
-    - if [[ "$SYMFONY_VERSION" = 3.* ]]; then composer require --no-update --dev symfony/cache:${SYMFONY_VERSION}; fi
+    - if [[ "$SYMFONY_VERSION" =~ ^3\.[1-9][0-9]? ]]; then composer require --no-update --dev symfony/cache:${SYMFONY_VERSION}; fi
     - composer remove --no-update --dev friendsofphp/php-cs-fixer
     - if [[ "$SYMFONY_VERSION" = *dev* ]]; then sed -i "s/\"MIT\"/\"MIT\",\"minimum-stability\":\"dev\"/g" composer.json; fi
     - composer update --prefer-source `if [[ $COMPOSER_PREFER_LOWEST = true ]]; then echo "--prefer-lowest --prefer-stable"; fi`
