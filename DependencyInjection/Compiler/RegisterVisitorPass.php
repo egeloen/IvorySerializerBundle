@@ -63,7 +63,7 @@ class RegisterVisitorPass implements CompilerPassInterface
 
                 $typeRegistry->addMethodCall(
                     'registerVisitor',
-                    [$attribute['direction'], $attribute['format'], new Reference($id)]
+                    [$mapping[$attribute['direction']], $attribute['format'], new Reference($id)]
                 );
             }
         }
