@@ -1,0 +1,2 @@
+code,message,exception.code,exception.message,exception.file,exception.line,exception.trace
+500,"Parent exception",321,"Parent exception",.+,\d+,".+"

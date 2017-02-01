@@ -40,6 +40,7 @@ class IvorySerializerExtension extends ConfigurableExtension
         $resources = [
             'cache',
             'common',
+            'fos',
             'mapping',
             'navigator',
             'registry',
@@ -137,6 +138,10 @@ class IvorySerializerExtension extends ConfigurableExtension
             ->getDefinition('ivory.serializer.type.date_time')
             ->addArgument($config['date_time']['format'])
             ->addArgument($config['date_time']['timezone']);
+
+        $container
+            ->getDefinition('ivory.serializer.type.exception')
+            ->addArgument($config['exception']['debug']);
     }
 
     /**

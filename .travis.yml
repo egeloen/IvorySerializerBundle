@@ -13,7 +13,7 @@ env:
     global:
         - COMPOSER_PREFER_LOWEST=false
         - SYMFONY_DEPRECATIONS_HELPER=weak
-        - SYMFONY_VERSION=2.3.*
+        - SYMFONY_VERSION=2.7.*
 
 before_script:
     - composer self-update
@@ -32,17 +32,9 @@ after_success:
 matrix:
     include:
         - php: 5.6
-          env: SYMFONY_VERSION=2.3.* COMPOSER_PREFER_LOWEST=true
+          env: SYMFONY_VERSION=2.7.* COMPOSER_PREFER_LOWEST=true
         - php: 5.6
           env: SYMFONY_VERSION=3.0.* COMPOSER_PREFER_LOWEST=true
-        - php: 5.6
-          env: SYMFONY_VERSION=2.4.*
-        - php: 5.6
-          env: SYMFONY_VERSION=2.5.*
-        - php: 5.6
-          env: SYMFONY_VERSION=2.6.*
-        - php: 5.6
-          env: SYMFONY_VERSION=2.7.*
         - php: 5.6
           env: SYMFONY_VERSION=2.8.* SYMFONY_DEPRECATIONS_HELPER=strict
         - php: 5.6
@@ -54,6 +46,7 @@ matrix:
         - php: 5.6
           env: SYMFONY_VERSION=3.3.*@dev SYMFONY_DEPRECATIONS_HELPER=strict
     allow_failures:
+        - php: hhvm
         - env: SYMFONY_VERSION=3.3.*@dev SYMFONY_DEPRECATIONS_HELPER=strict
 
 notifications:

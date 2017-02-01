@@ -12,12 +12,15 @@
 namespace Ivory\SerializerBundle\Tests\DependencyInjection;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use FOS\RestBundle\Serializer\Serializer as FOSSerializer;
+use FOS\RestBundle\Util\ExceptionValueMap;
 use Ivory\Serializer\Mapping\ClassMetadataInterface;
 use Ivory\Serializer\Mapping\Factory\CacheClassMetadataFactory;
 use Ivory\Serializer\Mapping\Loader\ChainClassMetadataLoader;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
 use Ivory\Serializer\Serializer;
 use Ivory\Serializer\Type\DateTimeType;
+use Ivory\Serializer\Type\ExceptionType;
 use Ivory\Serializer\Visitor\Csv\CsvDeserializationVisitor;
 use Ivory\Serializer\Visitor\Csv\CsvSerializationVisitor;
 use Ivory\Serializer\Visitor\Json\JsonDeserializationVisitor;
@@ -28,6 +31,7 @@ use Ivory\Serializer\Visitor\Yaml\YamlDeserializationVisitor;
 use Ivory\Serializer\Visitor\Yaml\YamlSerializationVisitor;
 use Ivory\SerializerBundle\CacheWarmer\SerializerCacheWarmer;
 use Ivory\SerializerBundle\DependencyInjection\IvorySerializerExtension;
+use Ivory\SerializerBundle\FOS\Type\ExceptionType as FOSExceptionType;
 use Ivory\SerializerBundle\IvorySerializerBundle;
 use Ivory\SerializerBundle\Tests\Fixtures\Bundle\AcmeFixtureBundle;
 use Ivory\SerializerBundle\Tests\Fixtures\Bundle\Model\Model;
@@ -35,6 +39,7 @@ use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 /**
@@ -57,7 +62,7 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
         $this->container->setParameter('kernel.debug', true);
         $this->container->setParameter('kernel.root_dir', __DIR__.'/../Fixtures');
         $this->container->set('annotation_reader', new AnnotationReader());
-        $this->container->set('cache.system', $this->createCacheItemPoolInterface());
+        $this->container->set('cache.system', $this->createCacheItemPoolMock());
         $this->container->registerExtension($extension = new IvorySerializerExtension());
         $this->container->loadFromExtension($extension->getAlias());
         (new IvorySerializerBundle())->build($this->container);
@@ -214,7 +219,7 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
 
     public function testCustomMappingCache()
     {
-        $this->container->set('cache.custom', $this->createCacheItemPoolInterface());
+        $this->container->set('cache.custom', $this->createCacheItemPoolMock());
         $this->loadConfiguration($this->container, 'mapping_cache');
         $this->container->compile();
 
@@ -409,6 +414,27 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
         );
     }
 
+    public function testFOSDisabled()
+    {
+        $this->container->compile();
+
+        $this->assertFalse($this->container->has('ivory.serializer.fos'));
+        $this->assertInstanceOf(ExceptionType::class, $this->container->get('ivory.serializer.type.exception'));
+    }
+
+    public function testFOSEnabled()
+    {
+        $this->container->setDefinition(
+            'fos_rest.exception.messages_map',
+            new Definition(ExceptionValueMap::class, [[]])
+        );
+
+        $this->container->compile();
+
+        $this->assertInstanceOf(FOSSerializer::class, $this->container->get('ivory.serializer.fos'));
+        $this->assertInstanceOf(FOSExceptionType::class, $this->container->get('ivory.serializer.type.exception'));
+    }
+
     /**
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      * @expectedExceptionMessageRegExp /^The path "(.*)" does not exist\.$/
@@ -416,6 +442,16 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
     public function testMappingPathsInvalid()
     {
         $this->loadConfiguration($this->container, 'mapping_paths_invalid');
+        $this->container->compile();
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage You must define at least one class metadata loader by enabling the reflection loader in your configuration or by registering a loader in the container with the tag "ivory.serializer.loader".
+     */
+    public function testMappingLoaderEmpty()
+    {
+        $this->loadConfiguration($this->container, 'mapping_loader_empty');
         $this->container->compile();
     }
 
@@ -471,7 +507,7 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|CacheItemPoolInterface
      */
-    private function createCacheItemPoolInterface()
+    private function createCacheItemPoolMock()
     {
         $pool = $this->createMock(CacheItemPoolInterface::class);
         $pool

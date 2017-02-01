@@ -6,3 +6,4 @@ The configuration allows you to set up the serializer the way you want instead o
  - [Types](/Resources/doc/configuration/types.md)
  - [Visitors](/Resources/doc/configuration/visitors.md)
  - [Cache](/Resources/doc/configuration/cache.md)
+ - [FOSRestBundle Integration](/Resources/doc/configuration/fos_rest.md)

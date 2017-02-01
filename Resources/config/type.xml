@@ -30,10 +30,23 @@
             <tag name="ivory.serializer.type" alias="DateTimeInterface" />
         </service>
 
+        <service id="ivory.serializer.type.exception" class="Ivory\Serializer\Type\ExceptionType">
+            <tag name="ivory.serializer.type" alias="Exception" />
+        </service>
+
         <service id="ivory.serializer.type.float" class="Ivory\Serializer\Type\FloatType">
             <tag name="ivory.serializer.type" alias="double" />
             <tag name="ivory.serializer.type" alias="float" />
             <tag name="ivory.serializer.type" alias="numeric" />
+        </service>
+
+        <service id="ivory.serializer.type.form" class="Ivory\SerializerBundle\Type\FormType">
+            <tag name="ivory.serializer.type" alias="Symfony\Component\Form\Form" />
+        </service>
+
+        <service id="ivory.serializer.type.form_error" class="Ivory\SerializerBundle\Type\FormErrorType">
+            <argument type="service" id="translator" on-invalid="null" />
+            <tag name="ivory.serializer.type" alias="Symfony\Component\Form\FormError" />
         </service>
 
         <service id="ivory.serializer.type.integer" class="Ivory\Serializer\Type\IntegerType">

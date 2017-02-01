@@ -1,0 +1,8 @@
+code: 500
+message: 'Parent exception'
+exception:
+    code: 321
+    message: 'Parent exception'
+    file: .+
+    line: \d+
+    trace: ".+"

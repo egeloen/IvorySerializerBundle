@@ -89,6 +89,12 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('timezone')->defaultValue(date_default_timezone_get())->end()
                     ->end()
                 ->end()
+                ->arrayNode('exception')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('debug')->defaultValue('%kernel.debug%')->end()
+                    ->end()
+                ->end()
             ->end();
     }
 

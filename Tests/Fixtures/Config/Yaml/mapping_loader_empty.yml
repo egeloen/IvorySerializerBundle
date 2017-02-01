@@ -1,0 +1,6 @@
+ivory_serializer:
+    mapping:
+        auto:
+            enabled: false
+        reflection: false
+        annotation: false
