@@ -5,7 +5,13 @@ mandatory except for deserializing but it is highly recommended to configure it 
 
 ## Built-in
 
-The bundle integrates all the [Serializer types](https://github.com/egeloen/ivory-serializer/blob/master/doc/type.md).
+The bundle integrates all the [Serializer types](https://github.com/egeloen/ivory-serializer/blob/master/doc/type.md)
+and also support the following types (available via the bundle):
+
+| Type                                   | Description                             |
+| -------------------------------------- | --------------------------------------- |
+| `Symfony\Component\Form\FormInterface` | Symfony form (serialization only)       |
+| `Symfony\Component\Form\FormError`     | Symfony form error (serialization only) |
 
 ## Configuration
 
@@ -23,6 +29,22 @@ ivory_serializer:
             format: "Y-m-d H:i:s"
             timezone: UTC
 ```
+
+### Exception
+
+If the kernel is in non debug mode, the serializer does not expose exception data but generate a generic structure 
+(code => 500, message => Internal Server Error). If your want to always get this behavior, you can force it with:
+
+``` php
+ivory_serializer:
+    types:
+        exception:
+            debug: false
+```
+
+Additionally, if the [FOSRestBundle](https://github.com/FriendsOfSymfony/FOSRestBundle) is loaded, the serializer will 
+use your exception map or the template status code in order to find the appropriate message (code => status code, 
+message => appropriate message according to your configuration).
 
 ## Custom
 

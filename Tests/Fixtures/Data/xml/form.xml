@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<result>
+  <code>400</code>
+  <message>Validation Failed</message>
+  <errors>
+    <errors>
+      <entry>error</entry>
+    </errors>
+    <children>
+      <foo>
+        <errors>
+          <entry>foo_error</entry>
+        </errors>
+      </foo>
+      <bar>
+        <errors>
+          <entry>bar_error</entry>
+        </errors>
+        <children>
+          <baz>
+            <errors>
+              <entry>baz_error</entry>
+            </errors>
+          </baz>
+          <bat/>
+        </children>
+      </bar>
+    </children>
+  </errors>
+</result>
