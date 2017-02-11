@@ -7,6 +7,7 @@
                         http://symfony.com/schema/dic/services/services-1.0.xsd"
 >
     <services>
+        <service id="ivory.serializer.type.guesser" class="Ivory\Serializer\Type\Guesser\TypeGuesser" />
         <service id="ivory.serializer.type.lexer" class="Ivory\Serializer\Type\Parser\TypeLexer" />
 
         <service id="ivory.serializer.type.parser" class="Ivory\Serializer\Type\Parser\TypeParser">

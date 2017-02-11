@@ -70,3 +70,26 @@ attribute representing the name of the type:
     </services>
 </container>
 ```
+
+By default, the type is registered for both directions (serialization and deserialization). You can also register a 
+type just for a specific direction:
+
+``` xml
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container
+    xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services
+                        http://symfony.com/schema/dic/services/services-1.0.xsd"
+>
+    <services>
+        <service
+            id="acme.serializer.type.custom"
+            class="Acme\Serializer\Type\CustomType"
+        >
+            <tag name="ivory.serializer.type" alias="custom" direction="serialization" />
+        </service>
+    </services>
+</container>
+```

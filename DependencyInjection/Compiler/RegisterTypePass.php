@@ -11,6 +11,7 @@
 
 namespace Ivory\SerializerBundle\DependencyInjection\Compiler;
 
+use Ivory\Serializer\Direction;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -37,11 +38,32 @@ class RegisterTypePass implements CompilerPassInterface
                     ));
                 }
 
+                if (!isset($attribute['direction'])) {
+                    $attribute['direction'] = 'all';
+                }
+
+                $mapping = [
+                    'all'             => [Direction::SERIALIZATION, Direction::DESERIALIZATION],
+                    'serialization'   => [Direction::SERIALIZATION],
+                    'deserialization' => [Direction::DESERIALIZATION],
+                ];
+
+                if (!isset($mapping[$attribute['direction']])) {
+                    throw new \RuntimeException(sprintf(
+                        'The "direction" attribute for the tag "%s" on the service "%s" is not valid (%s).',
+                        $tag,
+                        $id,
+                        $attribute['direction']
+                    ));
+                }
+
                 if ($attribute['alias'] === '!null') {
                     $attribute['alias'] = 'null';
                 }
 
-                $typeRegistry->addMethodCall('registerType', [$attribute['alias'], new Reference($id)]);
+                foreach ($mapping[$attribute['direction']] as $direction) {
+                    $typeRegistry->addMethodCall('registerType', [$attribute['alias'], $direction, new Reference($id)]);
+                }
             }
         }
     }

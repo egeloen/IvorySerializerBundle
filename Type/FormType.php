@@ -12,33 +12,30 @@
 namespace Ivory\SerializerBundle\Type;
 
 use Ivory\Serializer\Context\ContextInterface;
+use Ivory\Serializer\Direction;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
-use Ivory\Serializer\Type\AbstractClassType;
+use Ivory\Serializer\Type\TypeInterface;
 use Symfony\Component\Form\Form;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class FormType extends AbstractClassType
+class FormType implements TypeInterface
 {
     /**
      * {@inheritdoc}
      */
-    protected function serialize($form, TypeMetadataInterface $type, ContextInterface $context)
+    public function convert($data, TypeMetadataInterface $type, ContextInterface $context)
     {
+        if ($context->getDirection() === Direction::DESERIALIZATION) {
+            throw new \RuntimeException(sprintf('Deserializing a "%s" is not supported.', Form::class));
+        }
+
         return $context->getVisitor()->visitArray([
             'code'    => 400,
             'message' => 'Validation Failed',
-            'errors'  => $this->serializeForm($form),
+            'errors'  => $this->serializeForm($data),
         ], $type, $context);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function deserialize($data, TypeMetadataInterface $type, ContextInterface $context)
-    {
-        throw new \RuntimeException(sprintf('Deserializing a "%s" is not supported.', Form::class));
     }
 
     /**

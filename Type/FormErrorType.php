@@ -12,15 +12,16 @@
 namespace Ivory\SerializerBundle\Type;
 
 use Ivory\Serializer\Context\ContextInterface;
+use Ivory\Serializer\Direction;
 use Ivory\Serializer\Mapping\TypeMetadataInterface;
-use Ivory\Serializer\Type\AbstractClassType;
+use Ivory\Serializer\Type\TypeInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
  */
-class FormErrorType extends AbstractClassType
+class FormErrorType implements TypeInterface
 {
     /**
      * @var TranslatorInterface|null
@@ -38,17 +39,13 @@ class FormErrorType extends AbstractClassType
     /**
      * {@inheritdoc}
      */
-    protected function serialize($error, TypeMetadataInterface $type, ContextInterface $context)
+    public function convert($data, TypeMetadataInterface $type, ContextInterface $context)
     {
-        return $context->getVisitor()->visitString($this->translateError($error), $type, $context);
-    }
+        if ($context->getDirection() === Direction::DESERIALIZATION) {
+            throw new \RuntimeException(sprintf('Deserializing a "%s" is not supported.', FormError::class));
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function deserialize($data, TypeMetadataInterface $type, ContextInterface $context)
-    {
-        throw new \RuntimeException(sprintf('Deserializing a "%s" is not supported.', FormError::class));
+        return $context->getVisitor()->visitString($this->translateError($data), $type, $context);
     }
 
     /**

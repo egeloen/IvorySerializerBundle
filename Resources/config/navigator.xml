@@ -9,6 +9,7 @@
     <services>
         <service id="ivory.serializer.navigator" class="Ivory\Serializer\Navigator\Navigator">
             <argument type="service" id="ivory.serializer.registry.type" />
+            <argument type="service" id="ivory.serializer.type.guesser" />
         </service>
     </services>
 </container>
