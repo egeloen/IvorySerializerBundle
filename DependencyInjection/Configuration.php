@@ -15,6 +15,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @author GeLo <geloen.eric@gmail.com>
@@ -29,6 +30,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = $this->createTreeBuilder();
         $treeBuilder->root('ivory_serializer')
             ->children()
+            ->append($this->createEventNode())
             ->append($this->createMappingNode())
             ->append($this->createTypesNode())
             ->append($this->createVisitorsNode());
@@ -71,6 +73,18 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('paths')
                     ->prototype('scalar')->end()
                 ->end()
+            ->end();
+    }
+
+    /**
+     * @return ArrayNodeDefinition
+     */
+    private function createEventNode()
+    {
+        return $this->createNode('event')
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->booleanNode('enabled')->defaultValue(class_exists(EventDispatcher::class))->end()
             ->end();
     }
 

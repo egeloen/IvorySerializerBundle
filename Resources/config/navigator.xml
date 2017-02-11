@@ -7,7 +7,7 @@
                         http://symfony.com/schema/dic/services/services-1.0.xsd"
 >
     <services>
-        <service id="ivory.serializer.navigator" class="Ivory\Serializer\Navigator\Navigator">
+        <service id="ivory.serializer.navigator.default" class="Ivory\Serializer\Navigator\Navigator">
             <argument type="service" id="ivory.serializer.registry.type" />
             <argument type="service" id="ivory.serializer.type.guesser" />
         </service>

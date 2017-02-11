@@ -204,7 +204,7 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
         $classMetadataFactoryDefinition = $this->container->getDefinition($classMetadataFactoryService);
 
         $this->assertSame(
-            'ivory.serializer.mapping.factory.default',
+            'ivory.serializer.mapping.factory.event',
             (string) $classMetadataFactoryDefinition->getArgument(0)
         );
 
@@ -227,7 +227,7 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
         $classMetadataFactoryDefinition = $this->container->getDefinition($classMetadataFactoryService);
 
         $this->assertSame(
-            'ivory.serializer.mapping.factory.default',
+            'ivory.serializer.mapping.factory.event',
             (string) $classMetadataFactoryDefinition->getArgument(0)
         );
 
@@ -255,6 +255,25 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
             SerializerCacheWarmer::class,
             $this->container->get($cacheWarmerService)
         );
+    }
+
+    public function testEventEnabled()
+    {
+        $this->container->compile();
+
+        $this->assertTrue($this->container->has('ivory.serializer.event.dispatcher'));
+        $this->assertTrue($this->container->has('ivory.serializer.mapping.factory.event'));
+        $this->assertTrue($this->container->has('ivory.serializer.navigator.event'));
+    }
+
+    public function testEventDisabled()
+    {
+        $this->loadConfiguration($this->container, 'event_disabled');
+        $this->container->compile();
+
+        $this->assertFalse($this->container->has('ivory.serializer.event.dispatcher'));
+        $this->assertFalse($this->container->has('ivory.serializer.mapping.factory.event'));
+        $this->assertFalse($this->container->has('ivory.serializer.navigator.event'));
     }
 
     public function testDateTimeType()

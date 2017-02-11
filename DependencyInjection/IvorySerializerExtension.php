@@ -40,6 +40,7 @@ class IvorySerializerExtension extends ConfigurableExtension
         $resources = [
             'cache',
             'common',
+            'event',
             'fos',
             'mapping',
             'navigator',
@@ -54,6 +55,7 @@ class IvorySerializerExtension extends ConfigurableExtension
         }
 
         $this->loadCache($config, $container);
+        $this->loadEvent($config['event'], $container);
         $this->loadMapping($config['mapping'], $container);
         $this->loadTypes($config['types'], $container);
         $this->loadVisitors($config['visitors'], $container);
@@ -73,6 +75,29 @@ class IvorySerializerExtension extends ConfigurableExtension
         $container
             ->getDefinition('ivory.serializer.cache_warmer')
             ->addArgument($cache);
+    }
+
+    /**
+     * @param mixed[]          $config
+     * @param ContainerBuilder $container
+     */
+    private function loadEvent(array $config, ContainerBuilder $container)
+    {
+        if ($config['enabled']) {
+            $container
+                ->getDefinition('ivory.serializer.mapping.factory')
+                ->replaceArgument(0, new Reference('ivory.serializer.mapping.factory.event'));
+
+            $container->setAlias('ivory.serializer.navigator', 'ivory.serializer.navigator.event');
+
+            return;
+        }
+
+        $container->removeDefinition('ivory.serializer.event.dispatcher');
+        $container->removeDefinition('ivory.serializer.mapping.factory.event');
+        $container->removeDefinition('ivory.serializer.navigator.event');
+
+        $container->setAlias('ivory.serializer.navigator', 'ivory.serializer.navigator.default');
     }
 
     /**

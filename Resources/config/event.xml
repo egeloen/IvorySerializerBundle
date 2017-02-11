@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container
+    xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services
+                        http://symfony.com/schema/dic/services/services-1.0.xsd"
+>
+    <services>
+        <service
+            id="ivory.serializer.event.dispatcher"
+            class="Symfony\Component\EventDispatcher\EventDispatcher"
+        />
+
+        <service
+            id="ivory.serializer.mapping.factory.event"
+            class="Ivory\Serializer\Mapping\Factory\EventClassMetadataFactory"
+        >
+            <argument type="service" id="ivory.serializer.mapping.factory.default" />
+            <argument type="service" id="ivory.serializer.event.dispatcher" />
+        </service>
+
+        <service id="ivory.serializer.navigator.event" class="Ivory\Serializer\Navigator\EventNavigator">
+            <argument type="service" id="ivory.serializer.navigator.default" />
+            <argument type="service" id="ivory.serializer.event.dispatcher" />
+        </service>
+    </services>
+</container>

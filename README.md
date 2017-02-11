@@ -36,6 +36,7 @@ $deserialize = $serializer->deserialize($json, \stdClass::class, Format::JSON);
  - [Configuration](/Resources/doc/configuration/index.md)
     - [Mapping](/Resources/doc/configuration/mapping.md)
     - [Type](/Resources/doc/configuration/type.md)
+    - [Event](/Resources/doc/configuration/event.md)
     - [Visitor](/Resources/doc/configuration/visitor.md)
     - [Cache](/Resources/doc/configuration/cache.md)
     - [FOSRestBundle Integration](/Resources/doc/configuration/fos_rest.md)

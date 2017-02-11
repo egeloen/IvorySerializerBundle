@@ -1,0 +1,3 @@
+ivory_serializer:
+    event:
+        enabled: false
