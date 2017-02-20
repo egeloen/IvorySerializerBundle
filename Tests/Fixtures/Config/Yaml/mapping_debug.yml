@@ -2,5 +2,3 @@ ivory_serializer:
     mapping:
         cache:
             debug: false
-            prefix: acme
-            pool: cache.custom

@@ -11,6 +11,7 @@
 
 namespace Ivory\SerializerBundle;
 
+use Ivory\SerializerBundle\DependencyInjection\Compiler\RegisterCachePoolPass;
 use Ivory\SerializerBundle\DependencyInjection\Compiler\RegisterClassMetadataLoaderPass;
 use Ivory\SerializerBundle\DependencyInjection\Compiler\RegisterFOSServicePass;
 use Ivory\SerializerBundle\DependencyInjection\Compiler\RegisterListenerPass;
@@ -30,6 +31,7 @@ class IvorySerializerBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container
+            ->addCompilerPass(new RegisterCachePoolPass())
             ->addCompilerPass(new RegisterClassMetadataLoaderPass())
             ->addCompilerPass(new RegisterListenerPass())
             ->addCompilerPass(new RegisterFOSServicePass())
