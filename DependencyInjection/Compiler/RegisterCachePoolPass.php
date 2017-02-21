@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\CachePoolPass;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Definition;)
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -35,7 +35,7 @@ class RegisterCachePoolPass implements CompilerPassInterface
 
         $classMetadataFactory = $container->getDefinition($classMetadataFactoryService);
 
-        if (!$classMetadataFactory->getClass() !== CacheClassMetadataFactory::class) {
+        if ($classMetadataFactory->getClass() !== CacheClassMetadataFactory::class) {
             return;
         }
 
