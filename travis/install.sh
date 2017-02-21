@@ -20,7 +20,7 @@ composer self-update
 composer require --no-update symfony/framework-bundle:${SYMFONY_VERSION}
 
 if [[ "$SYMFONY_VERSION" =~ ^3\.[1-9][0-9]? ]]; then
-    composer require --no-update --dev symfony/cache:${SYMFONY_VERSION}
+    composer require --no-update symfony/cache:${SYMFONY_VERSION}
 fi
 
 composer remove --no-update --dev friendsofphp/php-cs-fixer

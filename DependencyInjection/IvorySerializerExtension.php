@@ -54,27 +54,10 @@ class IvorySerializerExtension extends ConfigurableExtension
             $loader->load($resource.'.xml');
         }
 
-        $this->loadCache($config, $container);
         $this->loadEvent($config['event'], $container);
         $this->loadMapping($config['mapping'], $container);
         $this->loadTypes($config['types'], $container);
         $this->loadVisitors($config['visitors'], $container);
-    }
-
-    /**
-     * @param mixed[]          $config
-     * @param ContainerBuilder $container
-     */
-    private function loadCache(array $config, ContainerBuilder $container)
-    {
-        $container
-            ->getDefinition('ivory.serializer.mapping.factory')
-            ->addArgument($cache = new Reference($config['mapping']['cache']['pool']))
-            ->addArgument($config['mapping']['cache']['prefix']);
-
-        $container
-            ->getDefinition('ivory.serializer.cache_warmer')
-            ->addArgument($cache);
     }
 
     /**
@@ -150,6 +133,34 @@ class IvorySerializerExtension extends ConfigurableExtension
                 'ivory.serializer.mapping.loader.'.$key,
                 $loader->addTag('ivory.serializer.loader')
             );
+        }
+
+        $this->loadMappingCache($config['cache'], $container);
+    }
+
+    /**
+     * @param mixed[]          $config
+     * @param ContainerBuilder $container
+     */
+    private function loadMappingCache(array $config, ContainerBuilder $container)
+    {
+        $cacheWarmerService = 'ivory.serializer.cache_warmer';
+        $classMetadataFactoryService = 'ivory.serializer.mapping.factory';
+
+        if ($config['debug']) {
+            $container->removeDefinition($cacheWarmerService);
+            $container->removeDefinition($classMetadataFactoryService);
+
+            $container->setAlias($classMetadataFactoryService, $classMetadataFactoryService.'.default');
+        } else {
+            $container
+                ->getDefinition($cacheWarmerService)
+                ->addArgument($cachePool = new Reference($config['pool']));
+
+            $container
+                ->getDefinition($classMetadataFactoryService)
+                ->addArgument($cachePool)
+                ->addArgument($config['prefix']);
         }
     }
 

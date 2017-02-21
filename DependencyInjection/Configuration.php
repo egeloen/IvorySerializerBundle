@@ -51,6 +51,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('cache')
                     ->addDefaultsIfNotSet()
                     ->children()
+                        ->booleanNode('debug')->defaultValue('%kernel.debug%')->end()
                         ->scalarNode('prefix')->defaultValue('ivory_serializer')->end()
                         ->scalarNode('pool')->defaultValue('cache.system')->end()
                     ->end()

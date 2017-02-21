@@ -16,6 +16,7 @@ use FOS\RestBundle\Serializer\Serializer as FOSSerializer;
 use FOS\RestBundle\Util\ExceptionValueMap;
 use Ivory\Serializer\Mapping\ClassMetadataInterface;
 use Ivory\Serializer\Mapping\Factory\CacheClassMetadataFactory;
+use Ivory\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Ivory\Serializer\Mapping\Loader\ChainClassMetadataLoader;
 use Ivory\Serializer\Mapping\PropertyMetadataInterface;
 use Ivory\Serializer\Serializer;
@@ -60,6 +61,7 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
         $this->container = new ContainerBuilder();
         $this->container->setParameter('kernel.bundles', []);
         $this->container->setParameter('kernel.debug', true);
+        $this->container->setParameter('kernel.cache_dir', sys_get_temp_dir());
         $this->container->setParameter('kernel.root_dir', __DIR__.'/../Fixtures');
         $this->container->set('annotation_reader', new AnnotationReader());
         $this->container->set('cache.system', $this->createCacheItemPoolMock());
@@ -76,6 +78,24 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
 
     public function testSerializer()
     {
+        $this->container->compile();
+
+        $this->assertInstanceOf(Serializer::class, $this->container->get('ivory.serializer'));
+
+        $this->assertInstanceOf(
+            ClassMetadataFactory::class,
+            $this->container->get('ivory.serializer.mapping.factory')
+        );
+
+        $this->assertInstanceOf(
+            ChainClassMetadataLoader::class,
+            $this->container->get('ivory.serializer.mapping.loader')
+        );
+    }
+
+    public function testSerializerWithoutDebug()
+    {
+        $this->loadConfiguration($this->container, 'mapping_debug');
         $this->container->compile();
 
         $this->assertInstanceOf(Serializer::class, $this->container->get('ivory.serializer'));
@@ -198,6 +218,7 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
 
     public function testMappingCache()
     {
+        $this->loadConfiguration($this->container, 'mapping_debug');
         $this->container->compile();
 
         $classMetadataFactoryService = 'ivory.serializer.mapping.factory';
@@ -242,6 +263,7 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
 
     public function testCacheWarmer()
     {
+        $this->loadConfiguration($this->container, 'mapping_debug');
         $this->container->compile();
 
         $cacheWarmerService = 'ivory.serializer.cache_warmer';
