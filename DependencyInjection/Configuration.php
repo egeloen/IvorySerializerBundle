@@ -23,6 +23,19 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class Configuration implements ConfigurationInterface
 {
     /**
+     * @var bool
+     */
+    private $debug;
+
+    /**
+     * @param bool $debug
+     */
+    public function __construct($debug = false)
+    {
+        $this->debug = $debug;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
@@ -51,7 +64,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('cache')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->booleanNode('debug')->defaultValue('%kernel.debug%')->end()
+                        ->booleanNode('debug')->defaultValue($this->debug)->end()
                         ->scalarNode('prefix')->defaultValue('ivory_serializer')->end()
                         ->scalarNode('pool')->defaultValue('cache.system')->end()
                     ->end()
@@ -107,7 +120,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('exception')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->booleanNode('debug')->defaultValue('%kernel.debug%')->end()
+                        ->booleanNode('debug')->defaultValue($this->debug)->end()
                     ->end()
                 ->end()
             ->end();
@@ -142,7 +155,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('version')->defaultValue('1.0')->end()
                         ->scalarNode('encoding')->defaultValue('UTF-8')->end()
-                        ->booleanNode('format_output')->defaultValue('%kernel.debug%')->end()
+                        ->booleanNode('format_output')->defaultValue($this->debug)->end()
                         ->scalarNode('root')->defaultValue('result')->end()
                         ->scalarNode('entry')->defaultValue('entry')->end()
                         ->scalarNode('entry_attribute')->defaultValue('key')->end()

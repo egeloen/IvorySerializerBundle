@@ -33,6 +33,14 @@ class IvorySerializerExtension extends ConfigurableExtension
     /**
      * {@inheritdoc}
      */
+    public function getConfiguration(array $config, ContainerBuilder $container)
+    {
+        return new Configuration($container->getParameter('kernel.debug'));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function loadInternal(array $config, ContainerBuilder $container)
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
