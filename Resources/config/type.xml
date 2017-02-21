@@ -15,65 +15,65 @@
         </service>
 
         <service id="ivory.serializer.type.array" class="Ivory\Serializer\Type\ArrayType">
-            <tag name="ivory.serializer.type" alias="array" />
+            <tag name="ivory.serializer.type" alias="array" priority="-1000" />
         </service>
 
         <service id="ivory.serializer.type.boolean" class="Ivory\Serializer\Type\BooleanType">
-            <tag name="ivory.serializer.type" alias="bool" />
-            <tag name="ivory.serializer.type" alias="boolean" />
+            <tag name="ivory.serializer.type" alias="bool" priority="-1000" />
+            <tag name="ivory.serializer.type" alias="boolean" priority="-1000" />
         </service>
 
         <service id="ivory.serializer.type.closure" class="Ivory\Serializer\Type\ClosureType">
-            <tag name="ivory.serializer.type" alias="closure" />
+            <tag name="ivory.serializer.type" alias="closure" priority="-1000" />
         </service>
 
         <service id="ivory.serializer.type.date_time" class="Ivory\Serializer\Type\DateTimeType">
-            <tag name="ivory.serializer.type" alias="DateTimeInterface" />
+            <tag name="ivory.serializer.type" alias="DateTimeInterface" priority="-1000" />
         </service>
 
         <service id="ivory.serializer.type.exception" class="Ivory\Serializer\Type\ExceptionType">
-            <tag name="ivory.serializer.type" alias="Exception" />
+            <tag name="ivory.serializer.type" alias="Exception" priority="-1000" />
         </service>
 
         <service id="ivory.serializer.type.float" class="Ivory\Serializer\Type\FloatType">
-            <tag name="ivory.serializer.type" alias="double" />
-            <tag name="ivory.serializer.type" alias="float" />
-            <tag name="ivory.serializer.type" alias="numeric" />
+            <tag name="ivory.serializer.type" alias="double" priority="-1000" />
+            <tag name="ivory.serializer.type" alias="float" priority="-1000" />
+            <tag name="ivory.serializer.type" alias="numeric" priority="-1000" />
         </service>
 
         <service id="ivory.serializer.type.form" class="Ivory\SerializerBundle\Type\FormType">
-            <tag name="ivory.serializer.type" alias="Symfony\Component\Form\Form" />
+            <tag name="ivory.serializer.type" alias="Symfony\Component\Form\Form" priority="-1000" />
         </service>
 
         <service id="ivory.serializer.type.form_error" class="Ivory\SerializerBundle\Type\FormErrorType">
             <argument type="service" id="translator" on-invalid="null" />
-            <tag name="ivory.serializer.type" alias="Symfony\Component\Form\FormError" />
+            <tag name="ivory.serializer.type" alias="Symfony\Component\Form\FormError" priority="-1000" />
         </service>
 
         <service id="ivory.serializer.type.integer" class="Ivory\Serializer\Type\IntegerType">
-            <tag name="ivory.serializer.type" alias="int" />
-            <tag name="ivory.serializer.type" alias="integer" />
+            <tag name="ivory.serializer.type" alias="int" priority="-1000" />
+            <tag name="ivory.serializer.type" alias="integer" priority="-1000" />
         </service>
 
         <service id="ivory.serializer.type.null" class="Ivory\Serializer\Type\NullType">
-            <tag name="ivory.serializer.type" alias="!null" />
+            <tag name="ivory.serializer.type" alias="!null" priority="-1000" />
         </service>
 
         <service id="ivory.serializer.type.object" class="Ivory\Serializer\Type\ObjectType">
             <argument type="service" id="ivory.serializer.mapping.factory" />
-            <tag name="ivory.serializer.type" alias="object" />
+            <tag name="ivory.serializer.type" alias="object" priority="-1000" />
         </service>
 
         <service id="ivory.serializer.type.resource" class="Ivory\Serializer\Type\ResourceType">
-            <tag name="ivory.serializer.type" alias="resource" />
+            <tag name="ivory.serializer.type" alias="resource" priority="-1000" />
         </service>
 
         <service id="ivory.serializer.type.std_class" class="Ivory\Serializer\Type\StdClassType">
-            <tag name="ivory.serializer.type" alias="stdClass" />
+            <tag name="ivory.serializer.type" alias="stdClass" priority="-1000" />
         </service>
 
         <service id="ivory.serializer.type.string" class="Ivory\Serializer\Type\StringType">
-            <tag name="ivory.serializer.type" alias="string" />
+            <tag name="ivory.serializer.type" alias="string" priority="-1000" />
         </service>
     </services>
 </container>

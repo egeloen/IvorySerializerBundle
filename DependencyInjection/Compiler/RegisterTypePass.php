@@ -27,9 +27,12 @@ class RegisterTypePass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $typeRegistry = $container->getDefinition('ivory.serializer.registry.type');
+        $types = [];
 
         foreach ($container->findTaggedServiceIds($tag = 'ivory.serializer.type') as $id => $attributes) {
             foreach ($attributes as $attribute) {
+                $priority = isset($attribute['priority']) ? $attribute['priority'] : 0;
+
                 if (!isset($attribute['alias'])) {
                     throw new \RuntimeException(sprintf(
                         'No "alias" attribute found for the tag "%s" on the service "%s".',
@@ -62,6 +65,17 @@ class RegisterTypePass implements CompilerPassInterface
                 }
 
                 foreach ($mapping[$attribute['direction']] as $direction) {
+                    $types[$direction][$priority][$id][] = $attribute;
+                }
+            }
+        }
+
+        foreach ($types as $direction => $sortedTypes) {
+            krsort($sortedTypes);
+            $sortedTypes = call_user_func_array('array_merge', $sortedTypes);
+
+            foreach ($sortedTypes as $id => $attributes) {
+                foreach ($attributes as $attribute) {
                     $typeRegistry->addMethodCall('registerType', [$attribute['alias'], $direction, new Reference($id)]);
                 }
             }

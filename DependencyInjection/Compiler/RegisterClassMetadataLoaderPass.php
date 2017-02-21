@@ -27,7 +27,14 @@ class RegisterClassMetadataLoaderPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $loaders = array_keys($container->findTaggedServiceIds($tag = 'ivory.serializer.loader'));
+        $loaders = [];
+
+        foreach ($container->findTaggedServiceIds($tag = 'ivory.serializer.loader') as $id => $attributes) {
+            foreach ($attributes as $attribute) {
+                $priority = isset($attribute['priority']) ? $attribute['priority'] : 0;
+                $loaders[$priority][] = new Reference($id);
+            }
+        }
 
         if (empty($loaders)) {
             throw new \RuntimeException(sprintf(
@@ -39,15 +46,16 @@ class RegisterClassMetadataLoaderPass implements CompilerPassInterface
 
         $loader = 'ivory.serializer.mapping.loader';
 
+        krsort($loaders);
+        $loaders = call_user_func_array('array_merge', $loaders);
+
         if (count($loaders) > 1) {
             $container->setDefinition($loader, new Definition(ChainClassMetadataLoader::class, [
-                array_map(function ($service) {
-                    return new Reference($service);
-                }, $loaders),
+                $loaders,
                 new Reference('ivory.serializer.type.parser'),
             ]));
         } else {
-            $container->setAlias($loader, array_shift($loaders));
+            $container->setAlias($loader, (string) array_shift($loaders));
         }
     }
 }
