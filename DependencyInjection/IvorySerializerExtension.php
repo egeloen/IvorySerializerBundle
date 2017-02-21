@@ -107,37 +107,31 @@ class IvorySerializerExtension extends ConfigurableExtension
         $typeParser = new Reference('ivory.serializer.type.parser');
 
         if ($config['reflection']) {
-            $loaders['reflection'] = $this->createClassMetadataLoaderDefinition(ReflectionClassMetadataLoader::class, [
+            $loaders['reflection'] = new Definition(ReflectionClassMetadataLoader::class, [
                 new Reference('property_info', ContainerBuilder::NULL_ON_INVALID_REFERENCE),
                 $typeParser,
             ]);
         }
 
         if ($config['annotation']) {
-            $loaders['annotation'] = $this->createClassMetadataLoaderDefinition(AnnotationClassMetadataLoader::class, [
+            $loaders['annotation'] = new Definition(AnnotationClassMetadataLoader::class, [
                 new Reference('annotation_reader'),
                 $typeParser,
             ]);
         }
 
         if (!empty($directories)) {
-            $loaders['directory'] = $this->createClassMetadataLoaderDefinition(DirectoryClassMetadataLoader::class, [
-                $directories,
-                $typeParser,
-            ]);
+            $loaders['directory'] = new Definition(DirectoryClassMetadataLoader::class, [$directories, $typeParser]);
         }
 
         foreach ($files as $file) {
-            $loaders['file_'.sha1($file)] = $this->createClassMetadataLoaderDefinition(FileClassMetadataLoader::class, [
-                $file,
-                $typeParser,
-            ]);
+            $loaders['file_'.sha1($file)] = new Definition(FileClassMetadataLoader::class, [$file, $typeParser]);
         }
 
         foreach ($loaders as $key => $loader) {
             $container->setDefinition(
                 'ivory.serializer.mapping.loader.'.$key,
-                $loader->addTag('ivory.serializer.loader')
+                $loader->addTag('ivory.serializer.loader', ['priority' => -1000])
             );
         }
 
@@ -267,19 +261,5 @@ class IvorySerializerExtension extends ConfigurableExtension
         }
 
         return array_merge($paths, $config['paths']);
-    }
-
-    /**
-     * @param string  $class
-     * @param mixed[] $arguments
-     *
-     * @return Definition
-     */
-    private function createClassMetadataLoaderDefinition($class, array $arguments = [])
-    {
-        $definition = new Definition($class, $arguments);
-        $definition->addTag('ivory.serializer.loader', ['priority' => -1000]);
-
-        return $definition;
     }
 }
