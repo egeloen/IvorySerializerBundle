@@ -46,7 +46,7 @@ class RegisterClassMetadataLoaderPass implements CompilerPassInterface
 
         $loader = 'ivory.serializer.mapping.loader';
 
-        krsort($loaders);
+        ksort($loaders);
         $loaders = call_user_func_array('array_merge', $loaders);
 
         if (count($loaders) > 1) {
