@@ -229,7 +229,11 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
             (string) $classMetadataFactoryDefinition->getArgument(0)
         );
 
-        $this->assertSame('cache.system', (string) $classMetadataFactoryDefinition->getArgument(1));
+        $this->assertSame(
+            class_exists(CachePoolPass::class) ? 'cache.system' : 'ivory.serializer.cache',
+            (string) $classMetadataFactoryDefinition->getArgument(1)
+        );
+
         $this->assertSame('ivory_serializer', $classMetadataFactoryDefinition->getArgument(2));
 
         $this->assertInstanceOf(
@@ -240,7 +244,7 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
 
     public function testCustomMappingCache()
     {
-        $this->container->set('cache.custom', $this->createCacheItemPoolMock());
+        $this->container->setDefinition('cache.custom', new Definition($this->createCacheItemPoolMockClass()));
         $this->loadConfiguration($this->container, 'mapping_cache');
         $this->container->compile();
 
@@ -543,6 +547,14 @@ abstract class AbstractIvorySerializerExtensionTest extends \PHPUnit_Framework_T
     {
         $loader = new XmlFileLoader($this->container, new FileLocator(__DIR__.'/../Fixtures/Service'));
         $loader->load($service.'.xml');
+    }
+
+    /**
+     * @return string
+     */
+    private function createCacheItemPoolMockClass()
+    {
+        return $this->getMockClass(CacheItemPoolInterface::class);
     }
 
     /**
