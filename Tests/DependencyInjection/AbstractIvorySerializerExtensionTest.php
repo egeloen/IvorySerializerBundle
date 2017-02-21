@@ -38,6 +38,7 @@ use Ivory\SerializerBundle\Tests\Fixtures\Bundle\AcmeFixtureBundle;
 use Ivory\SerializerBundle\Tests\Fixtures\Bundle\Model\Model;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\CachePoolPass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
