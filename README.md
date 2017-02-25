@@ -1,6 +1,7 @@
 # README
 
-[![Build Status](https://travis-ci.org/egeloen/IvorySerializerBundle.svg?branch=master)](http://travis-ci.org/egeloen/IvorySerializerBundle)
+[![Travis Build Status](https://travis-ci.org/egeloen/IvorySerializerBundle.svg?branch=master)](http://travis-ci.org/egeloen/IvorySerializerBundle)
+[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/8ydvhbgwsy0k39ux/branch/master?svg=true)](https://ci.appveyor.com/project/egeloen/ivoryserializerbundle/branch/master)
 [![Code Coverage](https://scrutinizer-ci.com/g/egeloen/IvorySerializerBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/egeloen/IvorySerializerBundle/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/egeloen/IvorySerializerBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/egeloen/IvorySerializerBundle/?branch=master)
 [![Dependency Status](http://www.versioneye.com/php/egeloen:serializer-bundle/badge.svg)](http://www.versioneye.com/php/egeloen:serializer-bundle)
