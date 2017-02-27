@@ -7,25 +7,25 @@ The mapping configuration allows you to configure how and where metadatas are lo
 By default, the bundle automatically registers the following directory and files for each bundles (if they exist):
 
 ```
-Resources/config/serializer
-Resources/config/serialization.json
-Resources/config/serialization.xml
-Resources/config/serialization.yml
+Resources/config/ivory-serializer
+Resources/config/ivory-serializer.json
+Resources/config/ivory-serializer.xml
+Resources/config/ivory-serializer.yml
 ```
 
-That means you just need to put your metadatas in the `Resources/config/serializer` directory or in the 
-`Resources/config/serializer.(json|xml|yml)` file of your bundle.
+That means you just need to put your metadatas in the `Resources/config/ivory-serializer` directory or in the 
+`Resources/config/ivory-serializer.(json|xml|yml)` file of your bundle.
 
-Hopefully, these paths are configurable. If you would prefer to use the `Resources/config/serialization` directory as 
-well as the `Resources/config/custom.xml`, you can use:
+Hopefully, these paths are configurable. If you would prefer to use the `Resources/config/serializer` directory as 
+well as the `Resources/config/serializer.xml`, you can use:
 
 ``` yaml
 ivory_serializer:
     mapping:
         auto:
             paths:
-                - Resources/config/serialization
-                - Resources/config/custom.xml
+                - Resources/config/serializer
+                - Resources/config/serializer.xml
 ```
 
 If you don't want to use the auto mapping feature, you can disable it:

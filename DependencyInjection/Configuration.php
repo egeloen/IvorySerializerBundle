@@ -76,10 +76,10 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('paths')
                             ->prototype('scalar')->end()
                             ->defaultValue([
-                                'Resources/config/serializer',
-                                'Resources/config/serialization.json',
-                                'Resources/config/serialization.xml',
-                                'Resources/config/serialization.yml',
+                                'Resources/config/ivory-serializer',
+                                'Resources/config/ivory-serializer.json',
+                                'Resources/config/ivory-serializer.xml',
+                                'Resources/config/ivory-serializer.yml',
                             ])
                         ->end()
                     ->end()
