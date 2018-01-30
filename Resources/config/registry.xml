@@ -7,7 +7,7 @@
                         http://symfony.com/schema/dic/services/services-1.0.xsd"
 >
     <services>
-        <service id="ivory.serializer.registry.type" class="Ivory\Serializer\Registry\TypeRegistry" />
-        <service id="ivory.serializer.registry.visitor" class="Ivory\Serializer\Registry\VisitorRegistry" />
+        <service id="ivory.serializer.registry.type" class="Ivory\Serializer\Registry\TypeRegistry" public="true"/>
+        <service id="ivory.serializer.registry.visitor" class="Ivory\Serializer\Registry\VisitorRegistry" public="true"/>
     </services>
 </container>

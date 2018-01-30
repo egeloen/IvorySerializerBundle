@@ -10,17 +10,19 @@
         <service
             id="ivory.serializer.event.dispatcher"
             class="Symfony\Component\EventDispatcher\EventDispatcher"
+            public="true"
         />
 
         <service
             id="ivory.serializer.mapping.factory.event"
             class="Ivory\Serializer\Mapping\Factory\EventClassMetadataFactory"
+            public="true"
         >
             <argument type="service" id="ivory.serializer.mapping.factory.default" />
             <argument type="service" id="ivory.serializer.event.dispatcher" />
         </service>
 
-        <service id="ivory.serializer.navigator.event" class="Ivory\Serializer\Navigator\EventNavigator">
+        <service id="ivory.serializer.navigator.event" class="Ivory\Serializer\Navigator\EventNavigator" public="true">
             <argument type="service" id="ivory.serializer.navigator.default" />
             <argument type="service" id="ivory.serializer.event.dispatcher" />
         </service>

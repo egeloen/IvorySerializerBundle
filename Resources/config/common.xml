@@ -7,8 +7,8 @@
                         http://symfony.com/schema/dic/services/services-1.0.xsd"
 >
     <services>
-        <service id="ivory.serializer.instantiator" class="Ivory\Serializer\Instantiator\DoctrineInstantiator" />
-        <service id="ivory.serializer.accessor" class="Ivory\Serializer\Accessor\ReflectionAccessor" />
-        <service id="ivory.serializer.mutator" class="Ivory\Serializer\Mutator\ReflectionMutator" />
+        <service id="ivory.serializer.instantiator" class="Ivory\Serializer\Instantiator\DoctrineInstantiator" public="true"/>
+        <service id="ivory.serializer.accessor" class="Ivory\Serializer\Accessor\ReflectionAccessor" public="true"/>
+        <service id="ivory.serializer.mutator" class="Ivory\Serializer\Mutator\ReflectionMutator" public="true"/>
     </services>
 </container>

@@ -10,6 +10,7 @@
         <service
             id="ivory.serializer.mapping.factory"
             class="Ivory\Serializer\Mapping\Factory\CacheClassMetadataFactory"
+            public="true"
         >
             <argument type="service" id="ivory.serializer.mapping.factory.default" />
         </service>
@@ -17,6 +18,7 @@
         <service
             id="ivory.serializer.mapping.factory.default"
             class="Ivory\Serializer\Mapping\Factory\ClassMetadataFactory"
+            public="true"
         >
             <argument type="service" id="ivory.serializer.mapping.loader" />
         </service>
