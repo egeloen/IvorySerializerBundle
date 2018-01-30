@@ -23,6 +23,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --filename=composer --in
 # Bash
 RUN chsh -s /bin/bash www-data
 
+# Permissions
+RUN chown www-data:www-data /var/www
+
 # Workdir
 WORKDIR /var/www/html
 
