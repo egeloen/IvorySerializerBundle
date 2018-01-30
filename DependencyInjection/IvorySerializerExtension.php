@@ -160,6 +160,7 @@ class IvorySerializerExtension extends ConfigurableExtension
             $container->removeDefinition($classMetadataFactoryService);
 
             $container->setAlias($classMetadataFactoryService, $classMetadataFactoryService.'.default');
+            $container->getAlias($classMetadataFactoryService)->setPublic(true);
         } else {
             $container
                 ->getDefinition($cacheWarmerService)

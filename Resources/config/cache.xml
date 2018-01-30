@@ -10,6 +10,7 @@
         <service
             id="ivory.serializer.cache_warmer"
             class="Ivory\SerializerBundle\CacheWarmer\SerializerCacheWarmer"
+            public="true"
         >
             <argument type="service" id="ivory.serializer.mapping.factory" />
             <argument type="service" id="ivory.serializer.mapping.loader" />

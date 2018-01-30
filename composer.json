@@ -21,9 +21,9 @@
         "friendsofphp/php-cs-fixer": "^2.0",
         "friendsofsymfony/rest-bundle": "^2.0",
         "phpunit/phpunit": "^5.4",
-        "symfony/form": "^2.7|^3.0",
-        "symfony/phpunit-bridge": "^2.7|^3.0",
-        "symfony/translation": "^2.7|^3.0"
+        "symfony/form": "^2.7|^3.0|^4.0",
+        "symfony/phpunit-bridge": "^2.7|^3.0|^4.0",
+        "symfony/translation": "^2.7|^3.0|^4.0"
     },
     "autoload": {
         "psr-4": { "Ivory\\SerializerBundle\\": "" }

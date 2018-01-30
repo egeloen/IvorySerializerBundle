@@ -7,7 +7,7 @@
                         http://symfony.com/schema/dic/services/services-1.0.xsd"
 >
     <services>
-        <service id="ivory.serializer.fos" class="Ivory\SerializerBundle\FOS\Serializer">
+        <service id="ivory.serializer.fos" class="Ivory\SerializerBundle\FOS\Serializer" public="true">
             <argument type="service" id="ivory.serializer" />
         </service>
     </services>

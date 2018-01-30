@@ -11,6 +11,7 @@
             id="ivory.serializer.visitor.serialization"
             class="Ivory\Serializer\Visitor\AbstractSerializationVisitor"
             abstract="true"
+            public="true"
         >
             <argument type="service" id="ivory.serializer.accessor" />
         </service>
@@ -19,6 +20,7 @@
             id="ivory.serializer.visitor.deserialization"
             class="Ivory\Serializer\Visitor\AbstractDeserializationVisitor"
             abstract="true"
+            public="true"
         >
             <argument type="service" id="ivory.serializer.instantiator" />
             <argument type="service" id="ivory.serializer.mutator" />
