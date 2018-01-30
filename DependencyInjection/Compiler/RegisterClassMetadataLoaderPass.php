@@ -50,10 +50,13 @@ class RegisterClassMetadataLoaderPass implements CompilerPassInterface
         $loaders = call_user_func_array('array_merge', $loaders);
 
         if (count($loaders) > 1) {
-            $container->setDefinition($loader, new Definition(ChainClassMetadataLoader::class, [
+            $definition = new Definition(ChainClassMetadataLoader::class, [
                 $loaders,
                 new Reference('ivory.serializer.type.parser'),
-            ]));
+            ]);
+            $definition->setPublic(true);
+
+            $container->setDefinition($loader, $definition);
         } else {
             $container->setAlias($loader, (string) array_shift($loaders));
         }
