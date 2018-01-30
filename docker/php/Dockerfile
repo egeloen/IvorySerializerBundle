@@ -24,7 +24,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --filename=composer --in
 RUN chsh -s /bin/bash www-data
 
 # Create workdir
-RUN mkdir -p /var/www && chown www-data:www-data /var/www
+RUN mkdir -p /var/www/html && chown www-data:www-data /var/www/html
 
 # Workdir
 WORKDIR /var/www/html
